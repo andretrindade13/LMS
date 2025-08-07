@@ -17,7 +17,12 @@
     "@lms/eslint-config": "*",
     "@types/jest": "^30.0.0",
     "jest": "^30.0.4",
+    "react-hook-form": "^7.62.0",
     "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
   }
 }
