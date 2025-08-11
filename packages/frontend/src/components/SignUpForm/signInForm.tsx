@@ -1,5 +1,6 @@
 'use client'
 import { AuthContext } from '@/app/context/AuthContext'
+import Link from 'next/link'
 import { useContext } from 'react'
 import {useForm} from 'react-hook-form'
 type TypeData = {
@@ -39,7 +40,7 @@ export default function SignInForm () {
                     </div>
                     <div>
                         <label htmlFor="password" className='sr-only'>
-                            Endereço de Email
+                            Senha
                         </label>
                         <input 
                             {...register('password')}
@@ -49,7 +50,7 @@ export default function SignInForm () {
                             autoComplete='current-password'
                             required
                             className='appearance-none rounded-none relative block w-full px-3 py-2 border border-white bg-indigo-50'
-                            placeholder='Endereço de email'
+                            placeholder='Sua senha'
                         />
                     </div>
                     </div>
@@ -81,6 +82,9 @@ export default function SignInForm () {
                         </button>
                     </div>
                </form>
+               <div className="mt-2.5 text-center text-indigo-500">
+                    <Link href="/cadastro">Ainda não sou cadastrado</Link>
+                </div>
                 </div>
             </div>
         

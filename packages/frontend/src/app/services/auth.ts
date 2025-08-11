@@ -9,7 +9,6 @@ const delay = (amount = 750) => new Promise(resolve => setTimeout(resolve, amoun
 
 export async function signInRequest(data: SignInRequestType) {
  await delay()
-
  return {
     token: uuid(),
     user: {
@@ -28,5 +27,17 @@ export async function getUserInformation() {
             email: "andre@gmail.com",
             avatar_url: "https://github.com/andretrindade13.png"
         } 
+    }
+}
+
+export async function signUpRequest(data: SignInRequestType) {
+    await delay()
+    return {
+       token: uuid(),
+       user: {
+           name: "André Trindade",
+           email: "andre@gmail.com",
+            avatar_url: "https://github.com/andretrindade13.png"
+         }
     }
 }
