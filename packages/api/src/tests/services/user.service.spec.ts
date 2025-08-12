@@ -1,3 +1,4 @@
+import { IUserRepository } from "../../repositories/user/user.interface";
 import { UserService } from "../../services/user.service"
 import { SignUpType } from "@lms/utils/schemas/userSchema";
 
@@ -6,7 +7,7 @@ import { SignUpType } from "@lms/utils/schemas/userSchema";
 
 describe("UserService", () => {
     let userService: UserService;
-    let userRepository: jest.Mocked<any>;
+    let userRepository: jest.Mocked<IUserRepository>;
     const data = {
             email: "validEmail@gmail.com",
             password: "@validPassword123",
