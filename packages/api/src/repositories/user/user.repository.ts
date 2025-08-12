@@ -1,4 +1,6 @@
-export class UserRepository {
+import { IUserRepository } from "./user.interface";
+
+export class UserRepository implements IUserRepository {
     async create(data: any): Promise<{ ok: boolean; error?: string }> {
         return { ok: true }; // Simulated response
     }

@@ -1,7 +1,7 @@
 import { SignUpSchema, signUpSchema } from "@lms/utils/schemas/userSchema";
-import { UserRepository } from "../repositories/user.repository";
+import { IUserRepository } from "../repositories/user/user.interface";
 export class UserService {
-    constructor(private userRepository: UserRepository) {}
+    constructor(private userRepository: IUserRepository) {}
     async validateUserExists(email: string): Promise<boolean> {
         try {
            const result = await this.userRepository.findUserByEmail(email)
