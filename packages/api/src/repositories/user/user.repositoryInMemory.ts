@@ -1,31 +1,20 @@
 import { IUserRepository } from "./user.interface";
-import { Low } from 'lowdb'
-import { Memory } from 'lowdb'
-
+type UserType = "student" | "teacher";
 type User = {
         id: string;
         email: string;
         password: string;
-        typeUser: 'student' | 'teacher';
+        typeUser: UserType;
         createdAt: Date;
         updatedAt: Date;        
     }
 
 export class UserRepositoryInMemory implements IUserRepository {
-    private db: Low<{ users: User[] }>;
+    private users: Map<string, User> = new Map();
 
-    constructor() {
-        this.db = new Low<{ users: User[] }>(new Memory<{ users: User[] }>(), { users: [] });
-        this.db.data = { users: [] };
-    }
-    private async ensureDb() {
-        await this.db.read();
-        this.db.data ||= { users: [] };
-    }
-    async create(data: User): Promise<{ ok: boolean; error?: string }> {
+    async create(data: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<{ ok: boolean; error?: string }> {
         try {
-            await this.ensureDb();
-            const userExists = this.db.data.users.find(user => user.email === data.email);
+            const userExists = this.users.get(data.email) || null;
             if(userExists) {
                 return { ok: false, error: "Úsuário já cadastrado"}
             }
@@ -38,20 +27,24 @@ export class UserRepositoryInMemory implements IUserRepository {
                 updatedAt: new Date()
             }
 
-            this.db.data.users.push(newUser)
+            this.users.set(newUser.email, newUser);
             return {ok: true}
 
 
         }catch (error) {
-            return { ok: false, error: error.message || 'Erro ao cadastrar usuário' };
+            throw new Error("DB Error: " + error);
         }
     }
 
-    async findUserByEmail(email: string): Promise<{ ok: boolean; user: User | null }> { 
+    async findUserByEmail(email: string): Promise<{ ok: boolean; user: User | null;  error?: string }> { 
         try {
-            
+            const userExists = this.users.get(email) || null;
+            if(userExists) {
+                return { ok: true, user: userExists }
+            }
+            return {ok: false, user: null}
         } catch (error) {
-            return { ok: false, user: null };
+            throw new Error("DB Error: " + error);
         }
     }
 }
