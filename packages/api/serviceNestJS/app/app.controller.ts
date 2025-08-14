@@ -1,6 +1,7 @@
 import 'reflect-metadata'
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { UserService } from '../../src/services/user.service';
+import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { UserService } from '../../core/src/services/user.service';
+import { error } from 'console';
 
 type UserType = "student" | "teacher";
 type User = {
@@ -16,7 +17,10 @@ export class AppController {
   constructor(private readonly service: UserService) {}
 
   @Post('/register')
-  async createUser(@Body() body: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) {
-    return this.service.registerUser(body);
+  async createUser(
+    @Body() body: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+  ) {
+    const result = await this.service.registerUser(body);
+    return { ok: result.ok, error: result.error || null }
   }
 }

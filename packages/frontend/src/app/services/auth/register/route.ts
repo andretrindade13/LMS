@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const delay =  (amount = 750) =>  new Promise(resolve => setTimeout(resolve, amount))
 export async function POST(req: NextRequest) {
-    await delay()
     const data = await req.json();
-    console.log(data)
-    return NextResponse.json({ ok: true })
+    const response =  await fetch('http://localhost:3333/users/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        cache: "no-store"
+    });
+    const result = await response.json();
+    return NextResponse.json(result)
 }

@@ -35,12 +35,12 @@ export default function SignUpForm({typeUser}: TypeParams) {
        const res = await fetch('/services/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({...data, typeUser})
+            body: JSON.stringify({...data, typeUser}),
+            cache: "no-store"
         })
-        
-        const {ok} =  await res.json()
+        const {ok, error} =  await res.json()
         if(!ok) {
-            alert('Erro ao cadastrar usuário')
+            alert(`${error}`)
             return
         }
         alert('Usuário cadastrado com sucesso')

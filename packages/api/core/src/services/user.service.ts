@@ -32,6 +32,7 @@ export class UserService {
             }
             const hashedPassword = await this.passwordHasher.hashPassword(data.password)
             const result = await this.userRepository.create({...data, password: hashedPassword})
+            console.log(result)
             if(result.ok === false) {
                 return { ok: false, error: result.error || 'Erro ao cadastrar usuário' };
             }

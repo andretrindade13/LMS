@@ -15,6 +15,7 @@ export class UserRepositoryInMemory implements IUserRepository {
     async create(data: Omit<User, "id" | "createdAt" | "updatedAt">): Promise<{ ok: boolean; error?: string }> {
         try {
             const userExists = this.users.get(data.email) || null;
+            console.log(userExists)
             if(userExists) {
                 return { ok: false, error: "Úsuário já cadastrado"}
             }
