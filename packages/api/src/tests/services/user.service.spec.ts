@@ -1,3 +1,4 @@
+import { IPasswordHasher } from "../../domains/services/passwordHasher.interface";
 import { IUserRepository } from "../../repositories/user/user.interface";
 import { UserService } from "../../services/user.service"
 import { SignUpType } from "@lms/utils/schemas/userSchema";
@@ -8,6 +9,7 @@ import { SignUpType } from "@lms/utils/schemas/userSchema";
 describe("UserService", () => {
     let userService: UserService;
     let userRepository: jest.Mocked<IUserRepository>;
+    let passwordHasher: jest.Mocked<IPasswordHasher>
     const data = {
             email: "validEmail@gmail.com",
             password: "@validPassword123",
@@ -18,7 +20,10 @@ describe("UserService", () => {
             create: jest.fn().mockResolvedValue({ ok: true }),
             findUserByEmail: jest.fn().mockResolvedValue({ ok: true, user: null }),
         };
-        userService = new UserService(userRepository);
+        passwordHasher = {
+            hashPassword: jest.fn().mockResolvedValue("PasswordHashed123")
+        }
+        userService = new UserService(userRepository, passwordHasher);
     })
 
     describe("registerUser", () => {
@@ -52,9 +57,15 @@ describe("UserService", () => {
 
         it("shoud userRepository called with correct data", async () => {
             await userService.registerUser(data)
-
-            expect(userRepository.create).toHaveBeenCalledWith(data);
+            const passwordHashed =  await passwordHasher.hashPassword(data.password)
+            expect(userRepository.create).toHaveBeenCalledWith({...data, password: passwordHashed});
             expect(userRepository.create).toHaveBeenCalledTimes(1);
+
+        })
+        it("shoud passwordHashed called with correct data", async () => {
+            await userService.registerUser(data)
+            expect(passwordHasher.hashPassword).toHaveBeenCalledWith(data.password);
+            expect(passwordHasher.hashPassword).toHaveBeenCalledTimes(1);
 
         })
         it("shoud return ok true if userRepository returns ok: true", async () => {
