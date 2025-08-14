@@ -3,6 +3,7 @@ import {useForm} from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import {signUpSchema} from '@/schemas/userSchemas'
 import { useState } from 'react'
+import {toast, Toaster} from 'sonner'
 type TypeParams = {
     typeUser: 'student' | 'teacher'
 }
@@ -38,12 +39,21 @@ export default function SignUpForm({typeUser}: TypeParams) {
             body: JSON.stringify({...data, typeUser}),
             cache: "no-store"
         })
+        console.log(res)
         const {ok, error} =  await res.json()
         if(!ok) {
-            alert(`${error}`)
+            toast.error(error || "Erro ao cadastrar", 
+                {
+                    duration: 5000 // 5 segundos
+                }
+            )
             return
         }
-        alert('Usuário cadastrado com sucesso')
+        toast.success("Cadastro realizado com sucesso!",
+            {
+                duration: 5000 // 5 segundos
+            }
+        )
         router.push('/login')
     }
    return (
@@ -122,6 +132,7 @@ export default function SignUpForm({typeUser}: TypeParams) {
                         >
                         Cadastrar
                         </button>
+                        <Toaster position="top-right" richColors />
                     </div>
                </form>
                 </div>
