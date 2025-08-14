@@ -1,7 +1,11 @@
 import { SignUpSchema, signUpSchema } from "@lms/utils/schemas/userSchema";
 import { IUserRepository } from "../repositories/user/user.interface";
+import { IPasswordHasher } from "../domains/services/passwordHasher.interface";
 export class UserService {
-    constructor(private userRepository: IUserRepository) {}
+    constructor(
+        private userRepository: IUserRepository,
+        private passwordHasher: IPasswordHasher
+    ) {}
     async validateUserExists(email: string): Promise<boolean> {
         try {
            const result = await this.userRepository.findUserByEmail(email)
@@ -26,8 +30,8 @@ export class UserService {
             if(userExists) { 
                 return { ok: false, error: 'Usuário já cadastrado' }
             }
-
-            const result = await this.userRepository.create(data)
+            const hashedPassword = await this.passwordHasher.hashPassword(data.password)
+            const result = await this.userRepository.create({...data, password: hashedPassword})
             if(result.ok === false) {
                 return { ok: false, error: result.error || 'Erro ao cadastrar usuário' };
             }
